@@ -13,7 +13,9 @@ export default function AddContent() {
   const [items, setItems] = useState([]);
   const [query, setQuery] = useState('');
 
-  const activeSource = useMemo(() => SOURCE_OPTIONS.find(s => s.key === active)!, [active]);
+  const activeSource = useMemo(() => {
+    return SOURCE_OPTIONS.find((s) => s.key === active) || SOURCE_OPTIONS[0];
+  }, [active]);
 
   function handleAdd(e) {
     e.preventDefault();
@@ -27,18 +29,20 @@ export default function AddContent() {
       title,
       addedAt: new Date().toISOString(),
     };
-    setItems(prev => [newItem, ...prev]);
+    setItems((prev) => [newItem, ...prev]);
     setUrl('');
   }
 
   function handleRemove(id) {
-    setItems(prev => prev.filter(i => i.id !== id));
+    setItems((prev) => prev.filter((i) => i.id !== id));
   }
 
   const filtered = useMemo(() => {
     if (!query.trim()) return items;
     const q = query.toLowerCase();
-    return items.filter(i => i.title.toLowerCase().includes(q) || i.url.toLowerCase().includes(q) || i.source.toLowerCase().includes(q));
+    return items.filter(
+      (i) => i.title.toLowerCase().includes(q) || i.url.toLowerCase().includes(q) || i.source.toLowerCase().includes(q)
+    );
   }, [items, query]);
 
   return (
